@@ -7,7 +7,14 @@ export type ApiFetchOptions = Omit<RequestInit, "headers"> & {
   accessToken?: string | null;
 };
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
+const ENV_API_URL = (process.env.NEXT_PUBLIC_API_URL ?? "").trim();
+const DEV_FALLBACK_API_URL = "http://localhost:4000";
+
+export function getApiBaseUrl(): string {
+  if (ENV_API_URL) return ENV_API_URL.replace(/\/$/, "");
+  if (process.env.NODE_ENV !== "production") return DEV_FALLBACK_API_URL;
+  return "";
+}
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
@@ -37,7 +44,8 @@ export async function apiFetch<T>(
   path: string,
   options: ApiFetchOptions = {}
 ): Promise<T> {
-  const url = path.startsWith("http") ? path : `${API_URL}${path}`;
+  const baseUrl = getApiBaseUrl();
+  const url = path.startsWith("http") ? path : `${baseUrl}${path}`;
   const isFormData =
     typeof FormData !== "undefined" && options.body instanceof FormData;
   const headers: Record<string, string> = {

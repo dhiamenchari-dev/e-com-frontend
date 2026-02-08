@@ -8,10 +8,10 @@ import { Button } from "../../../../components/Button";
 import { Input } from "../../../../components/Input";
 import { Select } from "../../../../components/Select";
 import { useAuth } from "../../../../lib/auth";
-import { getErrorMessage } from "../../../../lib/api";
+import { getApiBaseUrl, getErrorMessage } from "../../../../lib/api";
 import type { Category, ProductImage } from "../../../../lib/types";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
+const API_URL = getApiBaseUrl();
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;

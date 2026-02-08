@@ -1,10 +1,15 @@
 import type { NextConfig } from "next";
 import type { RemotePattern } from "next/dist/shared/lib/image-config";
 
-const imageHosts = (process.env.NEXT_PUBLIC_IMAGE_HOSTS ?? "")
+const imageHostValues = (process.env.NEXT_PUBLIC_IMAGE_HOSTS ?? "")
   .split(",")
   .map((value) => value.trim())
   .filter(Boolean);
+
+const apiUrl = (process.env.NEXT_PUBLIC_API_URL ?? "").trim();
+if (apiUrl) imageHostValues.push(apiUrl);
+
+const imageHosts = Array.from(new Set(imageHostValues));
 
 const remotePatterns: RemotePattern[] = imageHosts.map((value) => {
   const withProtocol = value.includes("://") ? value : `https://${value}`;
