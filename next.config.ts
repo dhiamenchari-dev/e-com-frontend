@@ -1,15 +1,32 @@
 import type { NextConfig } from "next";
+import type { RemotePattern } from "next/dist/shared/lib/image-config";
+
+const imageHosts = (process.env.NEXT_PUBLIC_IMAGE_HOSTS ?? "")
+  .split(",")
+  .map((value) => value.trim())
+  .filter(Boolean);
+
+const remotePatterns: RemotePattern[] = imageHosts.map((value) => {
+  const withProtocol = value.includes("://") ? value : `https://${value}`;
+  const url = new URL(withProtocol);
+  return {
+    protocol: url.protocol === "http:" ? "http" : "https",
+    hostname: url.hostname,
+    ...(url.port ? { port: url.port } : {}),
+  };
+});
+
+if (process.env.NODE_ENV !== "production") {
+  remotePatterns.push(
+    { protocol: "http", hostname: "localhost", port: "4000" },
+    { protocol: "http", hostname: "127.0.0.1", port: "4000" }
+  );
+}
 
 const nextConfig: NextConfig = {
-  /* config options here */
   reactCompiler: true,
   images: {
-    remotePatterns: [
-      { protocol: "https", hostname: "res.cloudinary.com" },
-      { protocol: "https", hostname: "images.unsplash.com" },
-      { protocol: "http", hostname: "localhost", port: "4000" },
-      { protocol: "http", hostname: "127.0.0.1", port: "4000" },
-    ],
+    remotePatterns: remotePatterns.length ? remotePatterns : undefined,
   },
 };
 

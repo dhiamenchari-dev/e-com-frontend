@@ -11,7 +11,7 @@ import { useAuth } from "../../../../lib/auth";
 import { getErrorMessage } from "../../../../lib/api";
 import type { Category, ProductImage } from "../../../../lib/types";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
