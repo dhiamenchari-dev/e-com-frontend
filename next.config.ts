@@ -34,7 +34,6 @@ const configDir = path.dirname(fileURLToPath(import.meta.url));
 const outputFileTracingRoot = path.join(configDir, "..");
 
 const nextConfig: NextConfig = {
-  reactCompiler: true,
   outputFileTracingRoot,
   images: {
     remotePatterns: remotePatterns.length ? remotePatterns : undefined,
