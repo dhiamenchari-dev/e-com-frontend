@@ -1,5 +1,7 @@
 import type { NextConfig } from "next";
 import type { RemotePattern } from "next/dist/shared/lib/image-config";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 const imageHostValues = (process.env.NEXT_PUBLIC_IMAGE_HOSTS ?? "")
   .split(",")
@@ -28,8 +30,12 @@ if (process.env.NODE_ENV !== "production") {
   );
 }
 
+const configDir = path.dirname(fileURLToPath(import.meta.url));
+const outputFileTracingRoot = path.join(configDir, "..");
+
 const nextConfig: NextConfig = {
   reactCompiler: true,
+  outputFileTracingRoot,
   images: {
     remotePatterns: remotePatterns.length ? remotePatterns : undefined,
   },
